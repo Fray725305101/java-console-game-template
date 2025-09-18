@@ -28,8 +28,11 @@ public class Game {
             System.out.println("Память: used=" + used + " free=" + free + " total=" + total);
         });
         commands.put("look", (ctx, a) -> System.out.println(ctx.getCurrent().describe()));
-        commands.put("move", (ctx, a) -> {
-            throw new InvalidCommandException("TODO-1: реализуйте перемещение игрока");
+        commands.put("move", (ctx, args) -> {
+            //Проверка на кол-во аргументов:
+            if (args.size() != 1) {
+                throw new IllegalArgumentException("Неверно задано направление");
+            }
         });
         commands.put("take", (ctx, a) -> {
             throw new InvalidCommandException("TODO-2: реализуйте взятие предмета");
