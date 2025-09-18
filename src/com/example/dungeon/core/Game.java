@@ -136,7 +136,14 @@ public class Game {
                 monster.setHp(monster.getHp() - player.getAttack());
                 //Проверяем, жив ли монстр
                 if (monster.getHp() <= 0) {
-                    System.out.println("Вы победили "+monster.getName());
+                    System.out.println("Вы победили "+monster.getName()+" (ур. "+monster.getLevel()+")");
+                    //Убираем монстра из комнаты. По структуре класса видно, что private Monster monster;
+                    //Это 1 монстр, а не коллекция, так что с чистой совестью просто зачищаем поле
+                    currentRoom.setMonster(null);
+                    //ЛУУУУУУТ!!!111!!1!
+                    Potion rewardPotion = new Potion("Среднее зелье", 10);
+                    currentRoom.getItems().add(rewardPotion);
+                    System.out.println(monster.getName()+" (ур. "+monster.getLevel()+")"+" оставил после себя "+rewardPotion.getName());
                 }
             }
         });
