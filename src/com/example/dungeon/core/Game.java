@@ -54,6 +54,25 @@ public class Game {
             if (args.size() != 1) {
                 throw new InvalidCommandException("Неверно указан предмет");
             }
+
+            String itemName = args.getFirst();
+            Room currentRoom = ctx.getCurrent();
+
+            //Ищем предмет в комнате по имени
+            Optional<Item> foundItem = currentRoom.getItems().stream()
+                    .filter(item -> item.getName().equalsIgnoreCase(itemName))
+                    .findFirst();
+
+            if (foundItem.isPresent()) {
+                Item item = foundItem.get();
+                //Удаляем из комнаты
+                currentRoom.getItems().remove(item);
+                //Добавляем в инвентарь игрока
+                ctx.getPlayer().getInventory().add(item);
+                System.out.println("Взято: "+item.getName());
+            } else {
+                throw new InvalidCommandException("Предмет "+itemName+" не найден");
+            }
         });
         commands.put("inventory", (ctx, a) -> {
             System.out.println("TODO-3: вывести инвентарь (Streams)");
