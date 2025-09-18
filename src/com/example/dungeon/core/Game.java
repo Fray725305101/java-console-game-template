@@ -33,6 +33,21 @@ public class Game {
             if (args.size() != 1) {
                 throw new IllegalArgumentException("Неверно задано направление");
             }
+
+            String direction = args.getFirst().toLowerCase();
+            //Получаем следующую комнату из карты соседей
+            Room currentRoom = ctx.getCurrent();
+            Room nextRoom = currentRoom.getNeighbors().get(direction);
+
+            //Если нашли, то перемещаемся
+            if (nextRoom != null) {
+                ctx.setCurrent(nextRoom);
+                System.out.println("Вы перешли в: "+nextRoom.getName());
+                //Показываем описание
+                System.out.println(nextRoom.describe());
+            } else { //Исключение при неправильном пути
+                throw new InvalidCommandException("Нет пути на "+direction);
+            }
         });
         commands.put("take", (ctx, a) -> {
             throw new InvalidCommandException("TODO-2: реализуйте взятие предмета");
