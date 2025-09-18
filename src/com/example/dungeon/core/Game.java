@@ -51,11 +51,11 @@ public class Game {
         });
         commands.put("take", (ctx, args) -> {
             //Проверка на кол-во аргументов:
-            if (args.size() != 1) {
-                throw new InvalidCommandException("Неверно указан предмет");
+            if (args.isEmpty()) {
+                throw new InvalidCommandException("Не указан предмет");
             }
 
-            String itemName = args.getFirst();
+            String itemName = String.join(" ", args);
             Room currentRoom = ctx.getCurrent();
 
             //Ищем предмет в комнате по имени
