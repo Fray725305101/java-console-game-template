@@ -98,7 +98,7 @@ public class Game {
             });
         });
         commands.put("use", (ctx, a) -> {
-            throw new InvalidCommandException("TODO-4: реализуйте использование предмета");
+
         });
         commands.put("fight", (ctx, a) -> {
             throw new InvalidCommandException("TODO-5: реализуйте бой");
