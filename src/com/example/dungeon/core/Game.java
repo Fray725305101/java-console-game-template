@@ -74,8 +74,15 @@ public class Game {
                 throw new InvalidCommandException("Предмет "+itemName+" не найден");
             }
         });
-        commands.put("inventory", (ctx, a) -> {
-            System.out.println("TODO-3: вывести инвентарь (Streams)");
+        commands.put("inventory", (ctx, args) -> {
+            List<Item> inventory = ctx.getPlayer().getInventory();
+            //Тут всё понятно
+            if (inventory.isEmpty()) {
+                System.out.println("Инвентарь пуст");
+                return;
+            }
+
+
         });
         commands.put("use", (ctx, a) -> {
             throw new InvalidCommandException("TODO-4: реализуйте использование предмета");
