@@ -31,7 +31,7 @@ public class Game {
         commands.put("move", (ctx, args) -> {
             //Проверка на кол-во аргументов:
             if (args.size() != 1) {
-                throw new IllegalArgumentException("Неверно задано направление");
+                throw new InvalidCommandException("Неверно задано направление");
             }
 
             String direction = args.getFirst().toLowerCase();
@@ -49,8 +49,11 @@ public class Game {
                 throw new InvalidCommandException("Нет пути на "+direction);
             }
         });
-        commands.put("take", (ctx, a) -> {
-            throw new InvalidCommandException("TODO-2: реализуйте взятие предмета");
+        commands.put("take", (ctx, args) -> {
+            //Проверка на кол-во аргументов:
+            if (args.size() != 1) {
+                throw new InvalidCommandException("Неверно указан предмет");
+            }
         });
         commands.put("inventory", (ctx, a) -> {
             System.out.println("TODO-3: вывести инвентарь (Streams)");
