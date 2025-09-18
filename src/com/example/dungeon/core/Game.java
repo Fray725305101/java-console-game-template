@@ -119,8 +119,26 @@ public class Game {
                 throw new InvalidCommandException("В вашем инвентаре нет "+itemName);
             }
         });
-        commands.put("fight", (ctx, a) -> {
-            throw new InvalidCommandException("TODO-5: реализуйте бой");
+        commands.put("fight", (ctx, args) -> {
+            Room currentRoom = ctx.getCurrent();
+            Monster monster = currentRoom.getMonster();
+            Player player = ctx.getPlayer();
+
+            //Проверяем, что есть монстр
+            if (monster == null) {
+                throw new InvalidCommandException("Здесь не с кем сражаться");
+            }
+
+            //Цикл боя
+            while (true) {
+                //Ход игрока
+                System.out.println("Вы бьёте "+monster.getName()+" на "+player.getAttack());
+                monster.setHp(monster.getHp() - player.getAttack());
+                //Проверяем, жив ли монстр
+                if (monster.getHp() <= 0) {
+                    System.out.println("Вы победили "+monster.getName());
+                }
+            }
         });
         commands.put("save", (ctx, a) -> SaveLoad.save(ctx));
         commands.put("load", (ctx, a) -> SaveLoad.load(ctx));
