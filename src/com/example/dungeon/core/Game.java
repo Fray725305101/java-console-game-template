@@ -155,6 +155,7 @@ public class Game {
 
                 if (player.getHp() <= 0) {
                     System.out.println("Вы потерпели поражение");
+                    System.exit(0);
                 }
             }
         });
