@@ -6,6 +6,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class Game {
     private final GameState state = new GameState();
@@ -82,7 +83,19 @@ public class Game {
                 return;
             }
 
+            //Группировка предметов по классам
+            Map<String, List<Item>> groupedItems = inventory.stream()
+                    .collect(Collectors.groupingBy(item -> item.getClass().getSimpleName()));
 
+            //Проходим по каждой группе и выводим инфу
+            groupedItems.forEach((type, items) -> {
+                //Сортировка по имени в группе
+                List<String> itemNames = items.stream()
+                        .map(Item::getName)
+                        .sorted()
+                        .toList();
+                System.out.println("- "+type+" ("+items.size()+"): "+String.join(", ", itemNames));
+            });
         });
         commands.put("use", (ctx, a) -> {
             throw new InvalidCommandException("TODO-4: реализуйте использование предмета");
