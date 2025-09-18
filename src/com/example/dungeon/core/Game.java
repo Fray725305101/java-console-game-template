@@ -97,8 +97,27 @@ public class Game {
                 System.out.println("- "+type+" ("+items.size()+"): "+String.join(", ", itemNames));
             });
         });
-        commands.put("use", (ctx, a) -> {
+        commands.put("use", (ctx, args) -> {
+            //Тут всё понятно
+            if (args.isEmpty()) {
+                throw new InvalidCommandException("Не указан предмет");
+            }
 
+            //Объединяем в одну строку аргументы
+            String itemName = String.join(" ", args);
+            Player player = ctx.getPlayer();
+
+            //Ищем в инвентаре
+            Optional<Item> foundItem = player.getInventory().stream()
+                    .filter(item -> item.getName().equalsIgnoreCase(itemName))
+                    .findFirst();
+
+            if (foundItem.isPresent()) {
+                Item item = foundItem.get();
+                item.apply(ctx);
+            } else {
+                throw new InvalidCommandException("В вашем инвентаре нет "+itemName);
+            }
         });
         commands.put("fight", (ctx, a) -> {
             throw new InvalidCommandException("TODO-5: реализуйте бой");
