@@ -132,8 +132,8 @@ public class Game {
             //Цикл боя
             while (true) {
                 //Ход игрока
-                System.out.println("Вы бьёте "+monster.getName()+" на "+player.getAttack());
                 monster.setHp(monster.getHp() - player.getAttack());
+                System.out.println("Вы бьёте "+monster.getName()+" на "+player.getAttack()+". HP монстра: "+monster.getHp());
                 //Проверяем, жив ли монстр
                 if (monster.getHp() <= 0) {
                     System.out.println("Вы победили "+monster.getName()+" (ур. "+monster.getLevel()+")");
@@ -144,6 +144,17 @@ public class Game {
                     Potion rewardPotion = new Potion("Среднее зелье", 10);
                     currentRoom.getItems().add(rewardPotion);
                     System.out.println(monster.getName()+" (ур. "+monster.getLevel()+")"+" оставил после себя "+rewardPotion.getName());
+                    break;
+                };
+
+                //Ход монстра
+                //Принимаем урон монстра = уровень монстра
+                int monsterDamage = monster.getLevel();
+                player.setHp(player.getHp()-monsterDamage);
+                System.out.println("Монстр отвечает на "+monsterDamage+". Ваше HP: "+player.getHp());
+
+                if (player.getHp() <= 0) {
+                    System.out.println("Вы потерпели поражение");
                 }
             }
         });
