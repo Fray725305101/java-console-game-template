@@ -153,6 +153,8 @@ public class Game {
                 Potion rewardPotion = new Potion("Среднее зелье", 10);
                 currentRoom.getItems().add(rewardPotion);
                 System.out.println(monster.getName()+" (ур. "+monster.getLevel()+")"+" оставил после себя "+rewardPotion.getName());
+                int scoreForWin = monster.getLevel(); //Начисляем кол-во очков = уровню монстра
+                ctx.addScore(scoreForWin); //Фиксиуем
             };
 
             //Ход монстра
