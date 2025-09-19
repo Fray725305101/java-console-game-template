@@ -132,35 +132,33 @@ public class Game {
                 throw new InvalidCommandException("Здесь не с кем сражаться");
             }
 
-            //Цикл боя
-            while (true) {
-                //Ход игрока
-                monster.setHp(monster.getHp() - player.getAttack());
-                System.out.println("Вы бьёте "+monster.getName()+" на "+player.getAttack()+". HP монстра: "+monster.getHp());
-                //Проверяем, жив ли монстр
-                if (monster.getHp() <= 0) {
-                    System.out.println("Вы победили "+monster.getName()+" (ур. "+monster.getLevel()+")");
-                    //Убираем монстра из комнаты. По структуре класса видно, что private Monster monster;
-                    //Это 1 монстр, а не коллекция, так что с чистой совестью просто зачищаем поле
-                    currentRoom.setMonster(null);
-                    //ЛУУУУУУТ!!!111!!1!
-                    Potion rewardPotion = new Potion("Среднее зелье", 10);
-                    currentRoom.getItems().add(rewardPotion);
-                    System.out.println(monster.getName()+" (ур. "+monster.getLevel()+")"+" оставил после себя "+rewardPotion.getName());
-                    break;
-                };
+            //Бой>
+            //Ход игрока
+            monster.setHp(monster.getHp() - player.getAttack());
+            System.out.println("Вы бьёте "+monster.getName()+" на "+player.getAttack()+". HP монстра: "+monster.getHp());
+            //Проверяем, жив ли монстр
+            if (monster.getHp() <= 0) {
+                System.out.println("Вы победили "+monster.getName()+" (ур. "+monster.getLevel()+")");
+                //Убираем монстра из комнаты. По структуре класса видно, что private Monster monster;
+                //Это 1 монстр, а не коллекция, так что с чистой совестью просто зачищаем поле
+                currentRoom.setMonster(null);
+                //ЛУУУУУУТ!!!111!!1!
+                Potion rewardPotion = new Potion("Среднее зелье", 10);
+                currentRoom.getItems().add(rewardPotion);
+                System.out.println(monster.getName()+" (ур. "+monster.getLevel()+")"+" оставил после себя "+rewardPotion.getName());
+            };
 
-                //Ход монстра
-                //Принимаем урон монстра = уровень монстра
-                int monsterDamage = monster.getLevel();
-                player.setHp(player.getHp()-monsterDamage);
-                System.out.println("Монстр отвечает на "+monsterDamage+". Ваше HP: "+player.getHp());
+            //Ход монстра
+            //Принимаем урон монстра = уровень монстра
+            int monsterDamage = monster.getLevel();
+            player.setHp(player.getHp()-monsterDamage);
+            System.out.println("Монстр отвечает на "+monsterDamage+". Ваше HP: "+player.getHp());
 
-                if (player.getHp() <= 0) {
-                    System.out.println("Вы потерпели поражение");
-                    System.exit(0);
-                }
+            if (player.getHp() <= 0) {
+                System.out.println("Вы потерпели поражение");
+                System.exit(0);
             }
+
         });
         commands.put("save", (ctx, a) -> SaveLoad.save(ctx));
         commands.put("load", (ctx, a) -> SaveLoad.load(ctx));
