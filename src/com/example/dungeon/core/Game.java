@@ -23,7 +23,6 @@ public class Game {
 
     private void registerCommands() {
         commands.put("help", (ctx, a) -> System.out.println("Команды: " + String.join(", ", commands.keySet())));
-
         //Эта команда выводит информацию по памяти Runtime environment JVM
         //Возвращает информацию по использованной памяти, свободной и доступной в байтах
         commands.put("gc-stats", (ctx, a) -> {
@@ -34,24 +33,26 @@ public class Game {
         commands.put("look", (ctx, a) -> System.out.println(ctx.getCurrent().describe()));
         commands.put("move", (ctx, args) -> {
             //Проверка на кол-во аргументов:
-            if (args.size() != 1) {
+            if (args.isEmpty()) {
                 throw new InvalidCommandException("Неверно задано направление");
             }
-
-            String direction = args.getFirst().toLowerCase();
+            String direction = String.join(" ", args).toLowerCase();
             //Получаем следующую комнату из карты соседей
             Room currentRoom = ctx.getCurrent();
             Room nextRoom = currentRoom.getNeighbors().get(direction);
-
             //Если нашли, то перемещаемся
             if (nextRoom != null) {
+                //Проверка на закрытость комнаты
+                if (nextRoom.isLocked()) {
+                    System.out.println("Дверь заперта. Нужен ключ");
+                    return;
+                }
                 //Добавляем начисление очков за новую комнату
                 //Добавим флаг visited в класс Room
                 if (!nextRoom.isVisited()) {
                     ctx.addScore(1); //Очко уходит в зрительский зал ©ЧГК
                     nextRoom.setVisited(true);
                 }
-
                 ctx.setCurrent(nextRoom);
                 System.out.println("Вы перешли в: "+nextRoom.getName());
                 //Показываем описание
@@ -65,15 +66,12 @@ public class Game {
             if (args.isEmpty()) {
                 throw new InvalidCommandException("Не указан предмет");
             }
-
             String itemName = String.join(" ", args);
             Room currentRoom = ctx.getCurrent();
-
             //Ищем предмет в комнате по имени
             Optional<Item> foundItem = currentRoom.getItems().stream()
                     .filter(item -> item.getName().equalsIgnoreCase(itemName))
                     .findFirst();
-
             if (foundItem.isPresent()) {
                 Item item = foundItem.get();
                 //Удаляем из комнаты
@@ -92,11 +90,9 @@ public class Game {
                 System.out.println("Инвентарь пуст");
                 return;
             }
-
             //Группировка предметов по классам
             Map<String, List<Item>> groupedItems = inventory.stream()
                     .collect(Collectors.groupingBy(item -> item.getClass().getSimpleName()));
-
             //Проходим по каждой группе и выводим инфу
             groupedItems.forEach((type, items) -> {
                 //Сортировка по имени в группе
@@ -112,16 +108,13 @@ public class Game {
             if (args.isEmpty()) {
                 throw new InvalidCommandException("Не указан предмет");
             }
-
             //Объединяем в одну строку аргументы
             String itemName = String.join(" ", args);
             Player player = ctx.getPlayer();
-
             //Ищем в инвентаре
             Optional<Item> foundItem = player.getInventory().stream()
                     .filter(item -> item.getName().equalsIgnoreCase(itemName))
                     .findFirst();
-
             if (foundItem.isPresent()) {
                 Item item = foundItem.get();
                 item.apply(ctx);
@@ -133,12 +126,10 @@ public class Game {
             Room currentRoom = ctx.getCurrent();
             Monster monster = currentRoom.getMonster();
             Player player = ctx.getPlayer();
-
             //Проверяем, что есть монстр
             if (monster == null) {
                 throw new InvalidCommandException("Здесь не с кем сражаться");
             }
-
             //Бой>
             //Ход игрока
             monster.setHp(monster.getHp() - player.getAttack());
@@ -169,9 +160,6 @@ public class Game {
                     System.exit(0);
                 }
             }
-
-
-
         });
         commands.put("save", (ctx, a) -> SaveLoad.save(ctx));
         commands.put("load", (ctx, a) -> SaveLoad.load(ctx));
@@ -199,10 +187,13 @@ public class Game {
         forest.getNeighbors().put("west", tower);
         cave.getNeighbors().put("west", forest);
         tower.getNeighbors().put("east", forest);
+        tower.getNeighbors().put("into the tower", hall);
+        hall.getNeighbors().put("outside", tower);
 
         forest.getItems().add(new Potion("Малое зелье", 5));
         forest.setMonster(new Monster("Волк", 1, 8, new Potion("Среднее зелье", 10)));
-        tower.setMonster(new Monster("Орк-стражник", 2, 15));
+        tower.setMonster(new Monster("Орк-стражник", 2, 15, new Key("Старинный ключ")));
+        hall.setLocked(true); //Заперли комнату
 
         state.setCurrent(square);
     }
