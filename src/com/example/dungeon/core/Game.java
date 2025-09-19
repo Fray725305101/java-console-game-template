@@ -23,6 +23,9 @@ public class Game {
 
     private void registerCommands() {
         commands.put("help", (ctx, a) -> System.out.println("Команды: " + String.join(", ", commands.keySet())));
+
+        //Эта команда выводит информацию по памяти Runtime environment JVM
+        //Возвращает информацию по использованной памяти, свободной и доступной в байтах
         commands.put("gc-stats", (ctx, a) -> {
             Runtime rt = Runtime.getRuntime();
             long free = rt.freeMemory(), total = rt.totalMemory(), used = total - free;
