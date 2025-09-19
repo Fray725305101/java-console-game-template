@@ -157,18 +157,20 @@ public class Game {
                 }
                 int scoreForWin = monster.getLevel(); //Начисляем кол-во очков = уровню монстра
                 ctx.addScore(scoreForWin); //Фиксиуем
-            };
+            } else {
+                //Ход монстра
+                //Принимаем урон монстра = уровень монстра
+                int monsterDamage = monster.getLevel();
+                player.setHp(player.getHp()-monsterDamage);
+                System.out.println("Монстр отвечает на "+monsterDamage+". Ваше HP: "+player.getHp());
 
-            //Ход монстра
-            //Принимаем урон монстра = уровень монстра
-            int monsterDamage = monster.getLevel();
-            player.setHp(player.getHp()-monsterDamage);
-            System.out.println("Монстр отвечает на "+monsterDamage+". Ваше HP: "+player.getHp());
-
-            if (player.getHp() <= 0) {
-                System.out.println("Вы потерпели поражение");
-                System.exit(0);
+                if (player.getHp() <= 0) {
+                    System.out.println("Вы потерпели поражение");
+                    System.exit(0);
+                }
             }
+
+
 
         });
         commands.put("save", (ctx, a) -> SaveLoad.save(ctx));
@@ -194,6 +196,7 @@ public class Game {
         forest.getNeighbors().put("east", cave);
         forest.getNeighbors().put("west", tower);
         cave.getNeighbors().put("west", forest);
+        tower.getNeighbors().put("east", forest);
 
         forest.getItems().add(new Potion("Малое зелье", 5));
         forest.setMonster(new Monster("Волк", 1, 8, new Potion("Среднее зелье", 10)));
