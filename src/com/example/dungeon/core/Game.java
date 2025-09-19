@@ -150,9 +150,11 @@ public class Game {
                 //Это 1 монстр, а не коллекция, так что с чистой совестью просто зачищаем поле
                 currentRoom.setMonster(null);
                 //ЛУУУУУУТ!!!111!!1!
-                Potion rewardPotion = new Potion("Среднее зелье", 10);
-                currentRoom.getItems().add(rewardPotion);
-                System.out.println(monster.getName()+" (ур. "+monster.getLevel()+")"+" оставил после себя "+rewardPotion.getName());
+                Item loot = monster.getLoot();
+                if (loot != null) {
+                    currentRoom.getItems().add(loot);
+                    System.out.println(monster.getName()+" (ур. "+monster.getLevel()+")"+" оставил после себя "+loot.getName());
+                }
                 int scoreForWin = monster.getLevel(); //Начисляем кол-во очков = уровню монстра
                 ctx.addScore(scoreForWin); //Фиксиуем
             };
@@ -179,19 +181,23 @@ public class Game {
     }
 
     private void bootstrapWorld() {
-        Player hero = new Player("Герой 1", 20, 5);
+        Player hero = new Player("Герой", 20, 5);
         state.setPlayer(hero);
 
         Room square = new Room("Площадь", "Каменная площадь с фонтаном.");
         Room forest = new Room("Лес", "Шелест листвы и птичий щебет.");
         Room cave = new Room("Пещера", "Темно и сыро.");
+        Room tower = new Room("Башня", "Неприступная башня высится серой глыбой");
+        Room hall = new Room("Зал", "Гулкий и мрачный зал");
         square.getNeighbors().put("north", forest);
         forest.getNeighbors().put("south", square);
         forest.getNeighbors().put("east", cave);
+        forest.getNeighbors().put("west", tower);
         cave.getNeighbors().put("west", forest);
 
         forest.getItems().add(new Potion("Малое зелье", 5));
-        forest.setMonster(new Monster("Волк", 1, 8));
+        forest.setMonster(new Monster("Волк", 1, 8, new Potion("Среднее зелье", 10)));
+        tower.setMonster(new Monster("Орк-стражник", 2, 15));
 
         state.setCurrent(square);
     }
