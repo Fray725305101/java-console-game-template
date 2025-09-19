@@ -187,6 +187,8 @@ public class Game {
         state.setPlayer(hero);
 
         Room square = new Room("Площадь", "Каменная площадь с фонтаном.");
+        square.setVisited(true); //За площадь очки не начисляем
+
         Room forest = new Room("Лес", "Шелест листвы и птичий щебет.");
         Room cave = new Room("Пещера", "Темно и сыро.");
         Room tower = new Room("Башня", "Неприступная башня высится серой глыбой");
