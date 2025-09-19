@@ -29,6 +29,7 @@ public class SaveLoad {
         }
     }
 
+    //Ошибка в методе загрузки. Лечим.
     public static void load(GameState s) {
         if (!Files.exists(SAVE)) {
             System.out.println("Сохранение не найдено.");
@@ -42,9 +43,10 @@ public class SaveLoad {
             }
             Player p = s.getPlayer();
             String[] pp = map.getOrDefault("player", "player;Hero;10;3").split(";");
-            p.setName(pp[1]);
-            p.setHp(Integer.parseInt(pp[2]));
-            p.setAttack(Integer.parseInt(pp[3]));
+            //Вот здесь косяк
+            p.setName(pp[0]); //Нумерация шла с 1
+            p.setHp(Integer.parseInt(pp[1])); //И падало ArrayIndexOutOfBoundsException
+            p.setAttack(Integer.parseInt(pp[2])); //Вот здесь. Логично, ведь в массиве всего 3 значения
             p.getInventory().clear();
             String inv = map.getOrDefault("inventory", "");
             if (!inv.isBlank()) for (String tok : inv.split(",")) {
