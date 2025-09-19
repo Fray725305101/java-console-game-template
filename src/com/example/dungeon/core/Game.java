@@ -45,6 +45,13 @@ public class Game {
 
             //Если нашли, то перемещаемся
             if (nextRoom != null) {
+                //Добавляем начисление очков за новую комнату
+                //Добавим флаг visited в класс Room
+                if (!nextRoom.isVisited()) {
+                    ctx.addScore(1); //Очко уходит в зрительский зал ©ЧГК
+                    nextRoom.setVisited(true);
+                }
+
                 ctx.setCurrent(nextRoom);
                 System.out.println("Вы перешли в: "+nextRoom.getName());
                 //Показываем описание

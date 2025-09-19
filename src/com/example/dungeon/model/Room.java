@@ -8,6 +8,7 @@ public class Room {
     private final Map<String, Room> neighbors = new HashMap<>();
     private final List<Item> items = new ArrayList<>();
     private Monster monster;
+    private boolean visited = false; //флаг для начисления очков
 
     public Room(String name, String description) {
         this.name = name;
@@ -46,5 +47,14 @@ public class Room {
             sb.append("\nВыходы: ").append(String.join(", ", neighbors.keySet()));
         }
         return sb.toString();
+    }
+
+    //Геттер и сеттер флага посещённости комнаты
+    public boolean isVisited() {
+        return visited;
+    }
+
+    public void setVisited(boolean visited) {
+        this.visited = visited;
     }
 }
