@@ -170,7 +170,7 @@ public class Game {
     }
 
     private void bootstrapWorld() {
-        Player hero = new Player("Герой", 20, 5);
+        Player hero = new Player("Герой 1", 20, 5);
         state.setPlayer(hero);
 
         Room square = new Room("Площадь", "Каменная площадь с фонтаном.");
@@ -203,7 +203,7 @@ public class Game {
                 try {
                     if (c == null) throw new InvalidCommandException("Неизвестная команда: " + cmd);
                     c.execute(state, args);
-                    state.addScore(1);
+                    //state.addScore(1); //Переписываем логику начисления очков
                 } catch (InvalidCommandException e) {
                     System.out.println("Ошибка: " + e.getMessage());
                 } catch (Exception e) {
