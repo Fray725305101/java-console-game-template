@@ -181,6 +181,7 @@ public class Game {
         Room cave = new Room("Пещера", "Темно и сыро.");
         Room tower = new Room("Башня", "Неприступная башня высится серой глыбой");
         Room hall = new Room("Зал", "Гулкий и мрачный зал");
+        Room dungeon = new Room("Подземелье", "Thank you Mario! But our princess is in another castle!");
         square.getNeighbors().put("north", forest);
         forest.getNeighbors().put("south", square);
         forest.getNeighbors().put("east", cave);
@@ -189,11 +190,15 @@ public class Game {
         tower.getNeighbors().put("east", forest);
         tower.getNeighbors().put("into the tower", hall);
         hall.getNeighbors().put("outside", tower);
+        hall.getNeighbors().put("down", dungeon);
+        dungeon.getNeighbors().put("up", hall);
 
         forest.getItems().add(new Potion("Малое зелье", 5));
         forest.setMonster(new Monster("Волк", 1, 8, new Potion("Среднее зелье", 10)));
-        tower.setMonster(new Monster("Орк-стражник", 2, 15, new Key("Старинный ключ")));
-        hall.setLocked(true); //Заперли комнату
+        tower.setMonster(new Monster("Орк-стражник", 2, 15, new Key("Ключ от башни")));
+        tower.getItems().add(new Key("Старинный ключ"));
+        hall.setLocked(1); //Заперли комнату
+        dungeon.setLocked(2); //И эту тоже
 
         state.setCurrent(square);
     }

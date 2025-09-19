@@ -1,3 +1,3 @@
-player;Герой 1;23;5
-inventory;Potion:Среднее зелье
-room;Лес
+player;Герой;20;5
+inventory;
+room;Площадь

@@ -9,7 +9,7 @@ public class Room {
     private final List<Item> items = new ArrayList<>();
     private Monster monster;
     private boolean visited = false; //флаг для начисления очков
-    private boolean locked = false; //Признак заблокированности комнаты
+    private int locked = 0; //Признак заблокированности комнаты. 0 - открыта, 1+ - тип ключа
 
     public Room(String name, String description) {
         this.name = name;
@@ -59,7 +59,16 @@ public class Room {
         this.visited = visited;
     }
 
-    public boolean isLocked() {return locked;}
+    //Геттеры и сеттеры для дверей
+    public int getLocked() {
+        return locked;
+    }
 
-    public void setLocked(boolean locked) {this.locked = locked;}
+    public int isLocked() {
+        return locked;
+    }
+
+    public void setLocked(int locked) {
+        this.locked = locked;
+    }
 }
