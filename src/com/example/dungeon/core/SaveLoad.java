@@ -61,7 +61,7 @@ public class SaveLoad {
             p.getInventory().clear();
             String inv = map.getOrDefault("inventory", "");
             if (!inv.isBlank()) for (String tok : inv.split(",")) {
-                String[] t = tok.split(":", 2);
+                String[] t = tok.split(":", 3);
                 if (t.length < 2) continue;
                 switch (t[0]) {
                     //Исправлена загрузка зелья. Раньше по умолчанию всегда предмету прописывалось 5
