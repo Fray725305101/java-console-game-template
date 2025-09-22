@@ -107,6 +107,59 @@ public class SaveLoad {
                     }
                 }
             }
+            String currentRoomName = map.getOrDefault("current_room", "Площадь");
+            for (String roomState : roomStates) {
+                String[] parts = roomState.split(";");
+                if (parts.length >= 6) {
+                    String roomName = parts[1];
+                    boolean visited = Boolean.parseBoolean(parts[2]);
+                    int locked = Integer.parseInt(parts[3]);
+                    boolean hasMonster = "1".equals(parts[4]);
+                    String itemsData = parts.length > 5 ? parts[5] : "";
+
+                    // Находим комнату по имени
+                    Room room = s.getAllRooms().stream()
+                            .filter(r -> r.getName().equals(roomName))
+                            .findFirst()
+                            .orElse(null);
+
+                    if (room != null) {
+                        // Восстанавливаем состояние комнаты
+                        room.setVisited(visited);
+                        room.setLocked(locked);
+
+                        // Очищаем предметы и добавляем сохраненные
+                        room.getItems().clear();
+                        if (!itemsData.isBlank()) {
+                            for (String itemStr : itemsData.split("\\|")) {
+                                String[] itemParts = itemStr.split(":");
+                                if (itemParts.length >= 3) {
+                                    switch (itemParts[0]) {
+                                        case "Potion" -> {
+                                            int heal = Integer.parseInt(itemParts[2]);
+                                            room.getItems().add(new Potion(itemParts[1], heal));
+                                        }
+                                        case "Key" -> {
+                                            int type = Integer.parseInt(itemParts[2]);
+                                            room.getItems().add(new Key(itemParts[1], type));
+                                        }
+                                    }
+                                }
+                            }
+                        }
+
+                        // Убираем монстра если он был убит
+                        if (!hasMonster) {
+                            room.setMonster(null);
+                        }
+
+                        // Устанавливаем текущую комнату
+                        if (roomName.equals(currentRoomName)) {
+                            s.setCurrent(room);
+                        }
+                    }
+                }
+            }
             System.out.println("Игра загружена (упрощённо).");
         } catch (IOException e) {
             throw new UncheckedIOException("Не удалось загрузить игру", e);
