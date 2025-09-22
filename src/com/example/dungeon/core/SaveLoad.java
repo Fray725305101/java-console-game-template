@@ -80,7 +80,7 @@ public class SaveLoad {
                     }
                 }
             }
-                System.out.println("Игра загружена (упрощённо).");
+            System.out.println("Игра загружена (упрощённо).");
             } catch (IOException e) {
                 throw new UncheckedIOException("Не удалось загрузить игру", e);
             }
