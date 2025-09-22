@@ -53,8 +53,16 @@ public class SaveLoad {
                 String[] t = tok.split(":", 2);
                 if (t.length < 2) continue;
                 switch (t[0]) {
-                    case "Potion" -> p.getInventory().add(new Potion(t[1], 5));
-                    case "Key" -> p.getInventory().add(new Key(t[1]));
+                    //Исправлена загрузка зелья. Раньше по умолчанию всегда предмету прописывалось 5
+                    case "Potion" -> {
+                        int heal = Integer.parseInt(t[2]);
+                        p.getInventory().add(new Potion(t[1], heal));
+                    }
+                    //Исправили загрузку ключа с типом
+                    case "Key" -> {
+                        int type = Integer.parseInt(t[2]);
+                        p.getInventory().add(new Key(t[1], type));
+                    }
                     case "Weapon" -> p.getInventory().add(new Weapon(t[1], 3));
                     default -> {
                     }
