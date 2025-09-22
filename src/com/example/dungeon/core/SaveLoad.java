@@ -31,8 +31,31 @@ public class SaveLoad {
                             .collect(Collectors.joining(","));
             w.write("inventory;" + inv);
             w.newLine();
-            w.write("room;" + s.getCurrent().getName());
+            w.write("current_room;" + s.getCurrent().getName());
             w.newLine();
+            //Сохраняем состояние комнат
+            for (Room room : s.getAllRooms()) {
+                StringBuilder roomLine = new StringBuilder();
+                roomLine.append("room_state;")
+                        .append(room.getName()).append(";")
+                        .append(room.isVisited()).append(";")
+                        .append(room.getLocked()).append(";")
+                        .append(room.getMonster() != null ? "1" : "0").append(";");
+                String roomItems = room.getItems().stream()
+                        .map(item -> {
+                            if (item instanceof Potion potion) {
+                                return "Potion:"+potion.getName()+":"+potion.getHeal();
+                            } else if (item instanceof Key key) {
+                                return "Key:"+key.getName()+":"+key.getType();
+                            }
+                            return "";
+                        })
+                        .filter(str -> !str.isEmpty())
+                        .collect(Collectors.joining("|"));
+                roomLine.append(roomItems);
+                w.write(roomLine.toString());
+                w.newLine();
+            }
             System.out.println("Сохранено в " + SAVE.toAbsolutePath());
             writeScore(p.getName(), s.getScore());
         } catch (IOException e) {
@@ -48,9 +71,14 @@ public class SaveLoad {
         }
         try (BufferedReader r = Files.newBufferedReader(SAVE)) {
             Map<String, String> map = new HashMap<>();
+            List<String> roomStates = new ArrayList<>(); //Храним состояние комнат
             for (String line; (line = r.readLine()) != null; ) {
-                String[] parts = line.split(";", 2);
-                if (parts.length == 2) map.put(parts[0], parts[1]);
+                if (line.startsWith("room_state;")) {
+                    roomStates.add(line);
+                } else {
+                    String[] parts = line.split(";", 2);
+                    if (parts.length == 2) map.put(parts[0], parts[1]);
+                }
             }
             Player p = s.getPlayer();
             String[] pp = map.getOrDefault("player", "player;Hero;10;3").split(";");

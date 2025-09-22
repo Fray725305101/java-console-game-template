@@ -7,8 +7,6 @@ public class GameState {
     private Player player;
     private Room current;
     private int score;
-    //Сериализуем комнаты
-    private List<Room> allRooms = new ArrayList<>();
 
     public Player getPlayer() {
         return player;
@@ -29,10 +27,4 @@ public class GameState {
     public int getScore() {return score;}
 
     public void addScore(int d) {this.score += d;}
-
-    public List<Room> getAllRoom() {return allRooms;}
-
-    public void setAllRooms(List<Room> rooms) {
-        this.allRooms = new ArrayList<>(rooms);
-    }
 }

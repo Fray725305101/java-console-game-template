@@ -171,7 +171,7 @@ public class Game {
     }
 
     private void bootstrapWorld() {
-        Player hero = new Player("Герой", 20, 5);
+        Player hero = new Player("Mario", 20, 5);
         state.setPlayer(hero);
 
         Room square = new Room("Площадь", "Каменная площадь с фонтаном.");
@@ -199,7 +199,6 @@ public class Game {
         cave.getItems().add(new Key("Старинный ключ", 2));
         hall.setLocked(1); //Заперли комнату
         dungeon.setLocked(2); //И эту тоже
-
         state.setCurrent(square);
     }
 
