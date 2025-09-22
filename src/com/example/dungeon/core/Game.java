@@ -42,7 +42,7 @@ public class Game {
             Room nextRoom = currentRoom.getNeighbors().get(direction);
             //Если нашли, то перемещаемся
             if (nextRoom != null) {
-                //Проверка на закрытость комнаты
+                //Проверяем, не закрыта ли дверь
                 if (nextRoom.isLocked()) {
                     System.out.println("Дверь заперта. Нужен ключ");
                     return;
@@ -58,7 +58,7 @@ public class Game {
                 //Показываем описание
                 System.out.println(nextRoom.describe());
             } else { //Исключение при неправильном пути
-                throw new InvalidCommandException("Нет пути на "+direction);
+                throw new InvalidCommandException("Нет пути: "+direction);
             }
         });
         commands.put("take", (ctx, args) -> {
