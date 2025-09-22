@@ -64,8 +64,8 @@ public class Room {
         return locked;
     }
 
-    public int isLocked() {
-        return locked;
+    public boolean isLocked() {
+        return locked > 0;
     }
 
     public void setLocked(int locked) {

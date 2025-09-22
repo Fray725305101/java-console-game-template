@@ -195,8 +195,8 @@ public class Game {
 
         forest.getItems().add(new Potion("Малое зелье", 5));
         forest.setMonster(new Monster("Волк", 1, 8, new Potion("Среднее зелье", 10)));
-        tower.setMonster(new Monster("Орк-стражник", 2, 15, new Key("Ключ от башни")));
-        tower.getItems().add(new Key("Старинный ключ"));
+        tower.setMonster(new Monster("Орк-стражник", 2, 15, new Key("Ключ от башни", 1)));
+        cave.getItems().add(new Key("Старинный ключ", 2));
         hall.setLocked(1); //Заперли комнату
         dungeon.setLocked(2); //И эту тоже
 
