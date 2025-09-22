@@ -17,7 +17,18 @@ public class SaveLoad {
             Player p = s.getPlayer();
             w.write("player;" + p.getName() + ";" + p.getHp() + ";" + p.getAttack());
             w.newLine();
-            String inv = p.getInventory().stream().map(i -> i.getClass().getSimpleName() + ":" + i.getName()).collect(Collectors.joining(","));
+            //String inv = p.getInventory().stream().map(i -> i.getClass().getSimpleName() + ":" + i.getName()).collect(Collectors.joining(","));
+            String inv = p.getInventory().stream()
+                            .map(item -> {
+                                if (item instanceof Potion potion) {
+                                    return "Potion:"+potion.getName()+":"+potion.getHeal();
+                                } else if (item instanceof Key key) {
+                                    return "Key:"+key.getName()+":"+key.getType();
+                                }
+                                return "";
+                            })
+                            .filter(str -> !str.isEmpty())
+                            .collect(Collectors.joining(","));
             w.write("inventory;" + inv);
             w.newLine();
             w.write("room;" + s.getCurrent().getName());
