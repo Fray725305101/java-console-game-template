@@ -22,7 +22,6 @@ public class Key extends Item {
                     .filter(room -> room.getLocked() == this.type)
                     .forEach(room -> room.setLocked(0));
             System.out.println("Дверь открыта ключом: "+getName());
-            ctx.getPlayer().getInventory().remove(this);
         } else {
             System.out.println("Нет подходящей двери");
         }
