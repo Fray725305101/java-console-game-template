@@ -1,8 +1,5 @@
 package com.example.dungeon.model;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class GameState {
     private Player player;
     private Room current;
