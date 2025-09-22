@@ -33,29 +33,6 @@ public class SaveLoad {
             w.newLine();
             w.write("current_room;" + s.getCurrent().getName());
             w.newLine();
-            //Сохраняем состояние комнат
-            for (Room room : s.getAllRooms()) {
-                StringBuilder roomLine = new StringBuilder();
-                roomLine.append("room_state;")
-                        .append(room.getName()).append(";")
-                        .append(room.isVisited()).append(";")
-                        .append(room.getLocked()).append(";")
-                        .append(room.getMonster() != null ? "1" : "0").append(";");
-                String roomItems = room.getItems().stream()
-                        .map(item -> {
-                            if (item instanceof Potion potion) {
-                                return "Potion:"+potion.getName()+":"+potion.getHeal();
-                            } else if (item instanceof Key key) {
-                                return "Key:"+key.getName()+":"+key.getType();
-                            }
-                            return "";
-                        })
-                        .filter(str -> !str.isEmpty())
-                        .collect(Collectors.joining("|"));
-                roomLine.append(roomItems);
-                w.write(roomLine.toString());
-                w.newLine();
-            }
             System.out.println("Сохранено в " + SAVE.toAbsolutePath());
             writeScore(p.getName(), s.getScore());
         } catch (IOException e) {
@@ -73,12 +50,8 @@ public class SaveLoad {
             Map<String, String> map = new HashMap<>();
             List<String> roomStates = new ArrayList<>(); //Храним состояние комнат
             for (String line; (line = r.readLine()) != null; ) {
-                if (line.startsWith("room_state;")) {
-                    roomStates.add(line);
-                } else {
-                    String[] parts = line.split(";", 2);
-                    if (parts.length == 2) map.put(parts[0], parts[1]);
-                }
+                String[] parts = line.split(";", 2);
+                if (parts.length == 2) map.put(parts[0], parts[1]);
             }
             Player p = s.getPlayer();
             String[] pp = map.getOrDefault("player", "player;Hero;10;3").split(";");
@@ -107,64 +80,11 @@ public class SaveLoad {
                     }
                 }
             }
-            String currentRoomName = map.getOrDefault("current_room", "Площадь");
-            for (String roomState : roomStates) {
-                String[] parts = roomState.split(";");
-                if (parts.length >= 6) {
-                    String roomName = parts[1];
-                    boolean visited = Boolean.parseBoolean(parts[2]);
-                    int locked = Integer.parseInt(parts[3]);
-                    boolean hasMonster = "1".equals(parts[4]);
-                    String itemsData = parts.length > 5 ? parts[5] : "";
-
-                    // Находим комнату по имени
-                    Room room = s.getAllRooms().stream()
-                            .filter(r -> r.getName().equals(roomName))
-                            .findFirst()
-                            .orElse(null);
-
-                    if (room != null) {
-                        // Восстанавливаем состояние комнаты
-                        room.setVisited(visited);
-                        room.setLocked(locked);
-
-                        // Очищаем предметы и добавляем сохраненные
-                        room.getItems().clear();
-                        if (!itemsData.isBlank()) {
-                            for (String itemStr : itemsData.split("\\|")) {
-                                String[] itemParts = itemStr.split(":");
-                                if (itemParts.length >= 3) {
-                                    switch (itemParts[0]) {
-                                        case "Potion" -> {
-                                            int heal = Integer.parseInt(itemParts[2]);
-                                            room.getItems().add(new Potion(itemParts[1], heal));
-                                        }
-                                        case "Key" -> {
-                                            int type = Integer.parseInt(itemParts[2]);
-                                            room.getItems().add(new Key(itemParts[1], type));
-                                        }
-                                    }
-                                }
-                            }
-                        }
-
-                        // Убираем монстра если он был убит
-                        if (!hasMonster) {
-                            room.setMonster(null);
-                        }
-
-                        // Устанавливаем текущую комнату
-                        if (roomName.equals(currentRoomName)) {
-                            s.setCurrent(room);
-                        }
-                    }
-                }
+                System.out.println("Игра загружена (упрощённо).");
+            } catch (IOException e) {
+                throw new UncheckedIOException("Не удалось загрузить игру", e);
             }
-            System.out.println("Игра загружена (упрощённо).");
-        } catch (IOException e) {
-            throw new UncheckedIOException("Не удалось загрузить игру", e);
         }
-    }
 
     public static void printScores() {
         if (!Files.exists(SCORES)) {
