@@ -25,6 +25,7 @@ public class Game {
         commands.put("help", (ctx, a) -> System.out.println("Команды: " + String.join(", ", commands.keySet())));
         //Эта команда выводит информацию по памяти Runtime environment JVM
         //Возвращает информацию по использованной памяти, свободной и доступной в байтах
+        //Ниже сделал команду для демонстрации работы GC
         commands.put("gc-stats", (ctx, a) -> {
             Runtime rt = Runtime.getRuntime();
             long free = rt.freeMemory(), total = rt.totalMemory(), used = total - free;
@@ -167,6 +168,30 @@ public class Game {
         commands.put("exit", (ctx, a) -> {
             System.out.println("Пока!");
             System.exit(0);
+        });
+        commands.put("alloc-demo", (ctx, args) -> {
+            System.out.println("Демонстрация работы GC...");
+            //До аллокации
+            Runtime rt = Runtime.getRuntime();
+            long memoryBefore = rt.totalMemory() - rt.freeMemory();
+            System.out.println("Память до: " + memoryBefore + " байт");
+            //Создаем много объектов для демонстрации работы GC
+            List<String> tempList = new ArrayList<>();
+            for (int i = 0; i < 100000; i++) {
+                tempList.add("Временный объект " + i + " " + new Date());
+            }
+            long memoryDuring = rt.totalMemory() - rt.freeMemory();
+            System.out.println("Память во время: " + memoryDuring + " байт");
+            System.out.println("Выделено: " + (memoryDuring - memoryBefore) + " байт");
+            //Освобождаем ссылки - объекты становятся кандидатами на GC
+            tempList = null;
+            //Выполняем сборку мусора (но это только suggestion)
+            System.gc();
+            //Даем время GC поработать
+            try { Thread.sleep(1000); } catch (InterruptedException e) {}
+            long memoryAfter = rt.totalMemory() - rt.freeMemory();
+            System.out.println("Память после: " + memoryAfter + " байт");
+            System.out.println("Освобождено GC: " + (memoryDuring - memoryAfter) + " байт");
         });
     }
 
